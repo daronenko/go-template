@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: hello-postgres-migrations
+  labels:
+    app: hello-postgres
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    spec:
+      containers:
+      - name: migrate
+        image: ghcr.io/kukymbr/goose-docker:3.21.1
+        imagePullPolicy: IfNotPresent
+        envFrom:
+        - configMapRef:
+            name: hello-postgres-migrations-secret
+        env:
+        - name: GOOSE_DRIVER
+          value: "postgres"
+        - name: GOOSE_DBSTRING
+          value: "host=$(POSTGRES_HOST) port=$(POSTGRES_PORT) user=$(POSTGRES_USER) password=$(POSTGRES_PASSWORD) dbname=$(POSTGRES_DB)"
+        - name: GOOSE_VERBOSE
+          value: "true"
+        volumeMounts:
+        - name: migrations
+          mountPath: /migrations
+      restartPolicy: Never
+      volumes:
+      - name: migrations
+        configMap:
+          name: hello-postgres-migrations-content
+  backoffLimit: 4

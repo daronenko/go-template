@@ -1,0 +1,19 @@
+apiVersion: v1
+data:
+  20240811154623_create_users_table.sql: |
+    -- +goose Up
+    -- +goose StatementBegin
+    CREATE TABLE users (
+        name TEXT PRIMARY KEY,
+        count INTEGER DEFAULT(1)
+    );
+    -- +goose StatementEnd
+
+    -- +goose Down
+    -- +goose StatementBegin
+    DROP TABLE users;
+    -- +goose StatementEnd
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: hello-postgres-migrations-content

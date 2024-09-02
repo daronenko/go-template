@@ -1,0 +1,50 @@
+name: CD-Hello
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "service/hello/**"
+
+jobs:
+  build:
+    name: Build Image
+    runs-on: ubuntu-latest
+    env:
+      SERVICE_NAME: hello
+    steps:
+      - name: Check out code into directory
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build Image
+        run: cd service/hello && make build-image
+
+      - name: Login to Docker Hub
+        run: docker login -u daronenko -p ${{ secrets.DOCKER_HUB_TOKEN }}
+
+      - name: Push Image
+        run: cd service/hello && make push-image
+
+  # deploy:
+  #   name: Deploy to Kubernetes
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: Check out code into directory
+  #     uses: actions/checkout@v4
+  #     with:
+  #       fetch-depth: 0
+
+  #   - name: Create kubeconfig
+  #     run: |
+  #       mkdir ${HOME}/.kube
+  #       echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > ${HOME}/.kube/config
+  #       cat ${HOME}/.kube/config
+
+  #   - name: Use context
+  #     run: kubectl config use-context production-cluster
+
+  #   - name: Deploy to k8s
+  #     run: kubectl rollout restart deployment hello

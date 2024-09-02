@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hello-config
+  labels:
+    app: hello
+data:
+  GRPC_HOST: localhost
+  GRPC_PORT: "3000"
+  HTTP_HOST: localhost
+  HTTP_PORT: "8080"
+  POSTGRES_DB: hello-db
+  POSTGRES_HOST: hello-postgres.default
+  POSTGRES_PASSWORD: password
+  POSTGRES_PORT: "5432"
+  POSTGRES_USER: user
+  SERVICE_NAME: hello

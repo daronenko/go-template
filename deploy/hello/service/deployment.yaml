@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hello
+  template:
+    metadata:
+      labels:
+        app: hello
+    spec:
+      initContainers:
+      - name: wait-for-postgres
+        image: busybox
+        command: ['sh', '-c', 'until nc -z hello-postgres 5432; do echo "Waiting for PostgreSQL..."; sleep 2; done;']
+      containers:
+      - image: daronenko/hello:latest
+        name: hello
+        ports:
+        - containerPort: 8080
+          name: hello
+        envFrom:
+        - configMapRef:
+            name: hello-config

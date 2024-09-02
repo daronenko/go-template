@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-postgres
+  labels:
+    app: hello-postgres
+spec:
+  type: NodePort
+  ports:
+    - port: 5432
+  selector:
+    app: hello-postgres

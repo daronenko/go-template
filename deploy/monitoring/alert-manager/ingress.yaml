@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: alerting-ui
+  namespace: monitoring
+  annotations:
+     nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: deploy.local
+    http:
+      paths:
+      - path: /alerting(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: alertmanager
+            port:
+              number: 9093

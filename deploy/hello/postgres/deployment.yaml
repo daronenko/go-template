@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-postgres
+  template:
+    metadata:
+      labels:
+        app: hello-postgres
+    spec:
+      containers:
+        - name: hello-postgres
+          image: postgres:16
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: hello-postgres-secret
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: hello-postgres-data
+      volumes:
+        - name: hello-postgres-data
+          persistentVolumeClaim:
+            claimName: hello-postgres-volume-claim
