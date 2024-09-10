@@ -92,7 +92,7 @@ view-coverage: --check-coverage
 
 .PHONY: view-coverage-html
 ## View code coverage report in browser if it exists otherwise generate.
-view-coverage-html: check-coverage
+view-coverage-html: --check-coverage
 	@go tool cover -html=coverage.out -o coverage.html
 	@open coverage.html
 
@@ -119,7 +119,7 @@ lint:
 docker-build:
 	@docker compose -f $(DOCKER_COMPOSE_PATH) build
 
-.PHONY: docker-migrate
+.PHONY: docker-%-migrate
 ## Start docker compose service of database and apply migrations.
 ## Name of docker compose service must match in available database.
 ## Available databases: postgres, mysql, mssql, redshift, tidb,
@@ -141,10 +141,10 @@ docker-start:
 docker-stop:
 	@docker compose -f $(DOCKER_COMPOSE_PATH) stop
 
-.PHONY: docker-bash
-## Run `bash` in docker container of microservice.
-docker-bash:
-	@docker exec -it $(SERVICE_NAME) bash
+.PHONY: docker-ash
+## Run `ash` in docker container of microservice.
+docker-ash:
+	@docker exec -it $(SERVICE_NAME) /bin/ash
 
 .PHONY: docker-psql
 ## Run `psql` in docker container of postgres.
