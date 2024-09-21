@@ -132,14 +132,18 @@ docker-%-migrate:
 	@docker compose -f $(DOCKER_COMPOSE_PATH) stop $*
 
 .PHONY: docker-start
-## Start docker container of microservice.
+## Start docker compose containers (all by default).
+## Format: `docker-start [compose=<docker-compose-service>]`.
+## Example: `docker-start`, `docker-stop compose=postgres`.
 docker-start:
-	@docker compose -f $(DOCKER_COMPOSE_PATH) up -d
+	@docker compose -f $(DOCKER_COMPOSE_PATH) up -d $(compose)
 
 .PHONY: docker-stop
-## Stop docker container of microservice.
+## Stop docker compose containers (all by default).
+## Format: `docker-stop [compose=<docker-compose-service>]`.
+## Example: `docker-stop`, `docker-stop compose=postgres`.
 docker-stop:
-	@docker compose -f $(DOCKER_COMPOSE_PATH) stop
+	@docker compose -f $(DOCKER_COMPOSE_PATH) stop $(compose)
 
 .PHONY: docker-ash
 ## Run `ash` in docker container of microservice.
